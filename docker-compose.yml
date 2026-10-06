@@ -1,0 +1,50 @@
+# Runs the bot on the server. See docs/DEPLOY.md.
+#   Start / update:  docker compose up -d --build
+#   Logs:            docker compose logs -f app
+#   Stop:            docker compose down
+#
+# Two containers:
+#   app   = the bot (only reachable by Caddy, never directly from the internet)
+#   caddy = HTTPS in front of it (gets and renews the certificate automatically)
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"   # rotate logs so the disk never fills up
+    max-file: "5"
+
+services:
+  app:
+    build: .
+    restart: always
+    env_file: .env
+    environment:
+      # Paths inside the container (override the relative ones used on your PC).
+      DB_PATH: /app/data/bot.db
+      GOOGLE_SERVICE_ACCOUNT_FILE: /app/secrets/service-account.json
+    volumes:
+      - ./data:/app/data               # database + daily backups (owned by uid 10001)
+      - ./secrets:/app/secrets:ro      # Google service account key, read-only
+    expose:
+      - "8000"
+    logging: *logging
+
+  caddy:
+    image: caddy:2
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env, e.g. frame-bot.duckdns.org}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data               # certificates: must persist (Let's Encrypt limits)
+      - caddy_config:/config
+    logging: *logging
+
+volumes:
+  caddy_data:
+  caddy_config:

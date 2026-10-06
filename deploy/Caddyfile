@@ -1,0 +1,17 @@
+# HTTPS in front of the bot. {$DOMAIN} comes from .env (e.g. frame-bot.duckdns.org).
+# Caddy gets and renews the certificate by itself (ports 80 and 443 must be open).
+{$DOMAIN} {
+	# Meta's webhook payloads are small; refuse anything big.
+	request_body {
+		max_size 1MB
+	}
+
+	# Only these paths reach the bot. Everything else gets a 404.
+	@bot path /webhook /health /privacy
+	handle @bot {
+		reverse_proxy app:8000
+	}
+	handle {
+		respond "Not found" 404
+	}
+}

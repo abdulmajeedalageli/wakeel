@@ -1,0 +1,9 @@
+# Runtime dependencies (pinned versions).
+fastapi==0.141.1
+uvicorn[standard]==0.54.0
+httpx==0.28.1
+pydantic-settings==2.15.0
+gspread==6.2.1
+google-auth==2.58.1
+google-genai==2.25.0
+openpyxl==3.1.5

@@ -1,0 +1,42 @@
+{
+  "_help": "How the bot reads your Excel listings file (sent into the Telegram group). 'tabs': the ONLY tabs it reads; every other tab (requests, finances...) is ignored. 'columns': the ONLY columns it reads, by header text (several spellings allowed). Owner names, phone numbers, the responsible employee, notes and prices are never sent to the AI; the price is only used to filter by budget. 'unavailable': words in the status column that mean a listing is gone (anything else, even empty, means available). 'types': words in the type column -> the bot's standard category (checked in this order). After editing, restart the app.",
+
+  "city": "Al-Kharj",
+
+  "tabs": [
+    {"name": "عروض البيع (سكني)",          "deal": "sale", "category": "residential", "id_prefix": "بيع سكني"},
+    {"name": "عروض البيع (تجاري+ زراعي)",  "deal": "sale", "category": "commercial",  "id_prefix": "بيع تجاري"},
+    {"name": "عروض التأجير (سكني)",        "deal": "rent", "category": "residential", "id_prefix": "إيجار سكني"},
+    {"name": "عروض التأجير (تجاري)",       "deal": "rent", "category": "commercial",  "id_prefix": "إيجار تجاري"}
+  ],
+
+  "columns": {
+    "number":   ["رقم العقار"],
+    "type":     ["النوع", "نوع العقار"],
+    "district": ["الحي"],
+    "facade":   ["الواجهة"],
+    "area":     ["المساحة"],
+    "price":    ["السعر", "الإيجار السنوي"],
+    "age":      ["عمر العقار"],
+    "terms":    ["حالة التأجير"],
+    "status":   ["حالة السوق", "حالة الطلب"]
+  },
+
+  "unavailable": ["تم البيع", "مباع", "منتهي", "انتهى", "محجوز", "مؤجر", "تم التأجير"],
+
+  "types": {
+    "farm":          ["مزرعة", "مزرعه"],
+    "rest_house":    ["استراحة", "استراحه", "استراحتين", "شاليه"],
+    "building":      ["عمارة", "عماره", "عمائر"],
+    "warehouse":     ["مستودع", "مستودعات"],
+    "workshop":      ["ورشة", "ورشه", "ورش"],
+    "labor_housing": ["سكن عمال", "غرف عمال", "غرفة عامل", "شقق عمال", "شقتين للعمال", "للعمال"],
+    "apartment":     ["شقة", "شقه", "شقق"],
+    "floor":         ["دور"],
+    "villa":         ["فلة", "فله", "فيلا", "فلل"],
+    "house":         ["بيت", "منزل", "دبلكس", "دوبلكس"],
+    "office":        ["مكتب"],
+    "shop":          ["محل", "محلات"],
+    "land":          ["أرض", "ارض", "أراضي", "اراضي", "أرضين", "ارضين", "قطعة", "قطعتين", "مخطط"]
+  }
+}

@@ -1,0 +1,16 @@
+# Never put secrets or customer data into the image.
+.env
+secrets/
+data/
+*.db
+*.db-*
+
+# Not needed to run the bot
+.git/
+.venv/
+tests/
+test_data/
+docs/
+__pycache__/
+*.pyc
+.pytest_cache/

@@ -1,0 +1,41 @@
+{
+  "_help": "How the bot reads your Google Sheet. 'columns': left side is the bot's field name (don't change), right side is the header text in YOUR sheet's first row (change freely, Arabic is fine). 'values': other words people might type in the type/deal/status columns (Arabic, synonyms), mapped to the bot's standard value. Capital letters and extra spaces are ignored automatically. After editing, restart the app.",
+
+  "columns": {
+    "property_id":   "property_id",
+    "type":          "type",
+    "deal":          "deal",
+    "city":          "city",
+    "district":      "district",
+    "price_sar":     "price_sar",
+    "area_sqm":      "area_sqm",
+    "bedrooms":      "bedrooms",
+    "bathrooms":     "bathrooms",
+    "features":      "features",
+    "status":        "status",
+    "ad_license_no": "ad_license_no",
+    "photos_link":   "photos_link",
+    "notes":         "notes",
+    "internal_notes": "internal_notes"
+  },
+
+  "values": {
+    "type": {
+      "apartment": ["شقة", "flat"],
+      "villa":     ["فيلا", "فله", "فلة"],
+      "land":      ["أرض", "plot"],
+      "floor":     ["دور", "دور مستقل"],
+      "office":    ["مكتب"],
+      "shop":      ["محل", "محل تجاري"]
+    },
+    "deal": {
+      "sale": ["بيع", "للبيع", "buy"],
+      "rent": ["إيجار", "للإيجار", "تأجير", "rental", "lease"]
+    },
+    "status": {
+      "available": ["متاح", "متوفر"],
+      "reserved":  ["محجوز"],
+      "sold":      ["مباع", "تم البيع"]
+    }
+  }
+}

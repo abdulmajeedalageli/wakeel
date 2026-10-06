@@ -1,0 +1,47 @@
+{
+  "_help": "Canonical name -> other spellings (Arabic, English, common typos). You don't need to list variants that only differ by 'Al-', 'حي', capital letters, hyphens or spaces: those are handled automatically. After editing, restart the app.",
+
+  "cities": {
+    "Al-Kharj": ["الخرج", "Kharj", "Al Kharj", "محافظة الخرج"],
+    "Riyadh": ["الرياض", "Riyad", "Ar Riyadh"]
+  },
+
+  "districts": {
+    "الصحنة":      ["Sahna", "Al-Sahna", "الصحنه"],
+    "الغنيم":      ["Ghunaim", "Al-Ghunaim"],
+    "المحمدية":    ["Muhammadiyah", "المحمديه"],
+    "الذهبي":      ["Dhahabi"],
+    "النهضة":      ["Nahda", "Al-Nahdah", "النهضه"],
+    "الخالدية":    ["Khalidiyah", "الخالديه"],
+    "الصناعية":    ["Sinaiyah", "Industrial", "الصناعيه", "المنطقة الصناعية"],
+    "المهندسين":   ["Muhandisin", "Engineers"],
+    "الناصرية":    ["Nasiriyah", "الناصريه"],
+    "الفيصلية":    ["Faisaliyah", "الفيصيلية", "الفيصليه"],
+    "الازدهار":    ["Izdihar", "الإزدهار"],
+    "السعيدان":    ["Saidan"],
+    "الزميقة":     ["Zumaiqah", "الزميقه"],
+    "العقيمي":     ["Uqaimi"],
+    "السلمية":     ["Salmiyah", "السلامية", "السلميه"],
+    "الصالحية":    ["Salihiyah", "الصالحيه"],
+    "الورود":      ["Wurud"],
+    "الدلم":       ["Dilam", "Al-Dilam"],
+    "الحوطة":      ["Hawtah", "حوطة بني تميم", "الحوطه"],
+    "الأخوين":     ["Akhawain", "الاخوين"],
+    "العذار":      ["Adhar"],
+    "Al-Narjis":     ["النرجس", "Narges", "Nargis", "Narjes"],
+    "Al-Malqa":      ["الملقا", "Malga", "Mulqa"],
+    "Al-Yasmin":     ["الياسمين", "Yasmeen", "Yasmine"],
+    "Hittin":        ["حطين", "Hitteen", "Hattin"],
+    "Al-Aqiq":       ["العقيق", "Aqeeq", "Akik"],
+    "Qurtubah":      ["قرطبة", "Qurtuba", "Cordoba"],
+    "Al-Sahafa":     ["الصحافة", "Sahafah"],
+    "Al-Rabi":       ["الربيع", "Rabea", "Rabie", "Rabee"],
+    "Al-Nakheel":    ["النخيل", "Nakhil"],
+    "Al-Qirawan":    ["القيروان", "Qairawan", "Qayrawan"],
+    "Al-Arid":       ["العارض", "Aarid", "Aared"],
+    "Tuwaiq":        ["طويق", "Tuwayq"],
+    "Al-Olaya":      ["العليا", "Olaya", "Oleya", "Ulaya"],
+    "Al-Muruj":      ["المروج", "Murooj", "Muraj"],
+    "Dhahrat Laban": ["ظهرة لبن", "Dhahrat Al Laban", "Dhahrat Laban"]
+  }
+}
