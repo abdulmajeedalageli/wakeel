@@ -1,23 +1,62 @@
-# frame — WhatsApp AI assistant
+# Wakeel — an AI sales agent on WhatsApp
 
-An automated WhatsApp assistant for **frame** (real estate, Saudi Arabia).
-Customers message the business number, and the assistant answers from the property sheet until the owner takes over the chat.
+**Wakeel** (وكيل, Arabic for "agent") answers a real-estate agency's customers on WhatsApp, in Arabic, around the clock.
+It searches the agency's live listings, collects leads, alerts the team when a customer is ready,
+and hands any conversation to a person through a Telegram console.
 
-> Work in progress, built in phases:
+It runs in production for **frame**, a real-estate agency in Al-Kharj, Saudi Arabia.
 
-| Phase | What | Status |
-|---|---|---|
-| 0 | Project setup, config, docs | ✅ |
-| 1 | Webhook: verification, signature check | ✅ |
-| 2 | Database & chat state | ✅ |
-| 3 | Property sheet | ✅ |
-| 4 | AI agent (Gemini) | ✅ |
-| 5 | Human takeover (Telegram console) | ✅ |
-| 6 | Leads & alerts | ✅ |
-| 7 | Deployment (Docker; Railway, or a VM with Caddy) | ✅ |
-| 8 | Hardening | ⏳ |
+## What it does
+
+- **Talks to customers in Arabic:** a light Saudi dialect, or formal Arabic if the customer writes formally, even when they write in English.
+- **Searches real listings** from a Google Sheet or the agency's Excel file: sale or rent, type, city, district, budget, bedrooms and area. It only states facts that are in the listings.
+- **Collects leads** as the conversation goes: name, budget, needs and timeline.
+- **Alerts the team** on Telegram when a customer wants a viewing, asks for a price, asks for a person, or is unhappy.
+- **Human takeover:** each customer gets their own topic in the team's Telegram group. Typing there replies on WhatsApp and pauses the AI for that chat. Photos and files go both ways.
+- **Working hours, a global pause,** and an automatic hand-back to the AI when the team goes quiet.
+
+## How it works
+
+```mermaid
+flowchart LR
+    C[Customer on WhatsApp] --> M[WhatsApp Cloud API]
+    M -->|signed webhook| W[FastAPI app]
+    W --> R{Who answers?}
+    R -->|AI| A[Gemini agent with 4 tools]
+    A --> L[(Listings: Google Sheet or Excel)]
+    A --> D[(SQLite: chats and leads)]
+    A -->|alerts| T[Telegram console, one topic per customer]
+    R -->|team| T
+    T -->|team reply| W
+    W -->|reply| M
+```
+
+The agent's four tools: `search_properties`, `get_property_details`, `save_lead` and `notify_owner`.
+
+## Engineering highlights
+
+- **Security:** every webhook is verified (HMAC-SHA256 `X-Hub-Signature-256`, constant-time compare). Secrets never reach logs.
+  The app exposes only `/webhook`, `/health` and `/privacy` (API docs are switched off), and the container runs as a non-root user.
+- **Privacy by design (Saudi PDPL):**
+  - The model sees only an allowlist of listing fields: never prices or internal notes.
+  - Phone numbers are stripped from everything sent to the model and from every reply.
+  - A customer's number always comes from the chat itself, never from the model.
+  - Logs mask phone numbers, and `/forget` deletes everything stored about a customer.
+- **Reliability:**
+  - Duplicate webhook deliveries are ignored, and a lock per chat keeps replies in order.
+  - Any AI failure gets a polite fallback reply plus an alert to the team.
+  - A failed listings refresh keeps the last good copy, and the SQLite database is backed up daily.
+- **Agent design:** stateless Gemini `generateContent` with manual function calling. The app runs the tools itself, with at most 5 rounds per message and a 20-message history.
+- **Tested:** 469 automated tests (pytest). WhatsApp, Gemini, Google and Telegram are all mocked, so the suite runs offline in about 15 seconds.
+
+## Tech stack
+
+Python 3.12 · FastAPI · httpx · Google Gemini (function calling) · WhatsApp Cloud API · Telegram Bot API ·
+SQLite · gspread · openpyxl · Docker · Railway (or Caddy on any Linux VM)
 
 ---
+
+The rest of this README is the setup and operating guide.
 
 ## 1. First-time setup (Windows)
 
@@ -80,7 +119,7 @@ Meta needs a public HTTPS URL to send webhooks to. For testing, a free **cloudfl
    The app's log shows your number masked, like `9665****1234`.
 
 The quick-tunnel URL changes every time you restart cloudflared, so update it in Meta each time.
-Phase 7 replaces the tunnel with a permanent domain.
+In production, the bot has a permanent HTTPS address instead (section 8).
 
 ## 5. Connect the property sheet
 
@@ -178,7 +217,7 @@ See the end of [docs/META_SETUP.md](docs/META_SETUP.md). The code is already pre
 app/
   main.py           FastAPI app: /webhook, /health, background processing
   agent.py          the AI agent: Gemini tool-use loop, history, fallback
-  agent_tools.py    the agent's 2 tools + the privacy allowlist
+  agent_tools.py    the agent's 4 tools + the privacy allowlist
   takeover.py       who answers now? (human mode, pause, work hours, timeout)
   owner_console.py  your Telegram console: commands, replies, forwards
   telegram.py       small Telegram Bot API client
@@ -189,7 +228,10 @@ app/
   whatsapp.py       sends messages via the Graph API
   db.py             SQLite storage: chats, messages, leads, dedupe
   sheet.py          reads + validates the Google Sheet
+  excel_listings.py reads listings from an Excel file sent in Telegram
   properties.py     in-memory property list, refresh, search, details
+  media.py          photos, voice notes and files between WhatsApp and Telegram
+  pages/privacy.html  the public privacy page (/privacy)
   locations.py      district/city name matching
   normalize.py      text/number clean-up (Arabic digits, "950,000", ...)
   replies.py        fixed reply texts (edit freely)
@@ -206,6 +248,7 @@ prompts/
 config/
   sheet.json        column mapping + value synonyms (edit freely)
   locations.json    district/city spellings (edit freely)
+  excel.json        which tabs and columns of the Excel file are read (edit freely)
 tests/              automated tests (+ sample payloads in tests/fixtures/)
 docs/META_SETUP.md  manual Meta setup
 docs/GOOGLE_SETUP.md  manual Google Sheets setup

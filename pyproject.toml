@@ -1,6 +1,6 @@
 # This file only holds tool settings. The project is not packaged/published.
 [project]
-name = "frame-whatsapp-bot"
+name = "wakeel"
 version = "0.1.0"
 requires-python = ">=3.12"
 
